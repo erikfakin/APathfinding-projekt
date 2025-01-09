@@ -380,6 +380,15 @@ class Game:
         endTime = time.time()
         self.elapsedTime = endTime - startTime
 
+    def clear_obstacles(self):
+        self.path = []
+
+        for y in range(ROWS):
+            for x in range(COLS):
+                self.grid[x][y].isObstacle = False
+
+        self.grid_updated = True
+
     # Brise sve prepreke i postavlja mrezu na pocetne vrijednosti.
     def clear_all(self):
         self.path = []
@@ -397,7 +406,7 @@ class Game:
         self.start = self.grid[0][0]
         self.end = self.grid[random.randint(0, COLS - 1)][random.randint(0, ROWS - 1)]
 
-        self.clear_all()
+        self.clear_obstacles()
         # generate random obstacles
 
         for i in range(obstacles):
@@ -407,7 +416,10 @@ class Game:
                 continue
             self.grid[x][y].isObstacle = True
 
-        self.grid_updated = True
+        # Provjerava ako postoji put
+        self.get_path()
+        while not self.path:
+            self.generate_random_obstacles()
 
     # Pokrece kretanje igraca.
     def start_moving(self):
