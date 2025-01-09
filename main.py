@@ -230,7 +230,7 @@ class Game:
         self.grid_updated = False
         self.player = Player()
         self.grid = [
-            [Node((col, row), random.randint(1, 3)) for row in range(ROWS)]
+            [Node((col, row), self.get_random_cost()) for row in range(ROWS)]
             for col in range(COLS)
         ]
         self.buttons = []
@@ -518,6 +518,15 @@ class Game:
                     ),
                     GRID_SIZE // 4,
                 )
+
+    def get_random_cost(self):
+        rand = random.randint(1, 10)
+        if rand < 9:
+            return 1
+        elif rand == 9:
+            return 2
+        elif rand == 10:
+            return 3
 
 
 # Provjerava ako se izvodi ovaj file
