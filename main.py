@@ -45,7 +45,7 @@ class Node:
         self.h = 0
         self.f = 0
         self.cost = cost
-        self.isObstacle = False
+        self.is_obstacle = False
 
     def __eq__(self, other):
         return self.position == other.position
@@ -113,7 +113,7 @@ def astar(grid, start, end):
             newNode = grid[nodePosition[0]][nodePosition[1]]
 
             # Provijeri ako je new_node obstacle. ako je prekosci
-            if newNode.isObstacle:
+            if newNode.is_obstacle:
                 continue
 
             # Provijeri ako je newNode u listi zatvorenih cvorova
@@ -226,7 +226,7 @@ class Game:
         self._display_surf = None
         self.size = self.weight, self.height = WINDOW_WIDTH, WINDOW_HEIGHT
         self.path = []
-        self.elapsedTime = 0
+        self.elapsed_time = 0
         self.grid_updated = False
         self.player = Player()
         self.grid = [
@@ -254,8 +254,8 @@ class Game:
         self.buttons.append(Button((810, 130), (180, 50), "Start", self.start_moving))
         self.buttons.append(Button((810, 190), (180, 50), "Stop", self.stop_moving))
 
-        self.timeDisplay = TextDisplay((810, MAP_HEIGHT - 50))
-        self.lengthDisplay = TextDisplay((810, MAP_HEIGHT - 100))
+        self.time_display = TextDisplay((810, MAP_HEIGHT - 50))
+        self.length_display = TextDisplay((810, MAP_HEIGHT - 100))
 
         self._running = True
 
@@ -280,40 +280,40 @@ class Game:
 
         # sa ljevim klikom dodajemo prepreku
         if mouse_buttons[0] == 1:  # Left mouse button
-            if not self.grid[col][row].isObstacle:
-                self.grid[col][row].isObstacle = True
+            if not self.grid[col][row].is_obstacle:
+                self.grid[col][row].is_obstacle = True
                 self.grid_updated = True
 
         # sa desnim klikom brisemo prepreke
         elif mouse_buttons[2] == 1:  # Right mouse button
-            if self.grid[col][row].isObstacle:
-                self.grid[col][row].isObstacle = False
+            if self.grid[col][row].is_obstacle:
+                self.grid[col][row].is_obstacle = False
                 self.grid_updated = True
 
         keys = pygame.key.get_pressed()
         # sa tipkom 1 postavljamo polje sa tezinom 1
         if keys[pygame.K_1]:
-            self.grid[col][row].isObstacle = False
+            self.grid[col][row].is_obstacle = False
             self.grid[col][row].cost = 1
             self.grid_updated = True
         # sa tipkom 2 postavljamo polje sa tezinom 1
         elif keys[pygame.K_2]:
-            self.grid[col][row].isObstacle = False
+            self.grid[col][row].is_obstacle = False
             self.grid[col][row].cost = 2
             self.grid_updated = True
         # sa tipkom 3 postavljamo polje sa tezinom 3
         elif keys[pygame.K_3]:
-            self.grid[col][row].isObstacle = False
+            self.grid[col][row].is_obstacle = False
             self.grid[col][row].cost = 3
             self.grid_updated = True
         # sa tipkom s postavljamo lokaciju igraca
         elif keys[pygame.K_s]:
-            self.grid[col][row].isObstacle = False
+            self.grid[col][row].is_obstacle = False
             self.start = self.grid[col][row]
             self.grid_updated = True
         # sa tipkom e postavljamo cilj
         elif keys[pygame.K_e]:
-            self.grid[col][row].isObstacle = False
+            self.grid[col][row].is_obstacle = False
             self.end = self.grid[col][row]
             self.grid_updated = True
 
@@ -331,8 +331,8 @@ class Game:
                 if self.path:
                     self.start = self.path[0]
 
-        self.timeDisplay.set_text(str(round(self.elapsedTime * 1000, 3)) + "ms")
-        self.lengthDisplay.set_text("Total cost: " + str(self.get_path_cost()))
+        self.time_display.set_text(str(round(self.elapsed_time * 1000, 3)) + "ms")
+        self.length_display.set_text("Total cost: " + str(self.get_path_cost()))
 
     # Iscrtava sve na ekranu: mrezu, putanju, igraca, dugmadi i tekst.
     def on_render(self):
@@ -351,8 +351,8 @@ class Game:
         for button in self.buttons:
             button.draw(self._display_surf)
 
-        self.timeDisplay.draw(self._display_surf)
-        self.lengthDisplay.draw(self._display_surf)
+        self.time_display.draw(self._display_surf)
+        self.length_display.draw(self._display_surf)
 
         # Azurira ekran
         pygame.display.flip()
@@ -375,17 +375,17 @@ class Game:
 
     # Izračunava najkraći put koristeći A* algoritam
     def get_path(self):
-        startTime = time.time()
+        start_time = time.time()
         self.path = astar(self.grid, self.start, self.end)
-        endTime = time.time()
-        self.elapsedTime = endTime - startTime
+        end_time = time.time()
+        self.elapsed_time = end_time - start_time
 
     def clear_obstacles(self):
         self.path = []
 
         for y in range(ROWS):
             for x in range(COLS):
-                self.grid[x][y].isObstacle = False
+                self.grid[x][y].is_obstacle = False
 
         self.grid_updated = True
 
@@ -395,7 +395,7 @@ class Game:
 
         for y in range(ROWS):
             for x in range(COLS):
-                self.grid[x][y].isObstacle = False
+                self.grid[x][y].is_obstacle = False
                 self.grid[x][y].cost = 1
 
         self.grid_updated = True
@@ -414,7 +414,7 @@ class Game:
             y = random.randint(0, ROWS - 1)
             if self.grid[x][y] == self.start or self.grid[x][y] == self.end:
                 continue
-            self.grid[x][y].isObstacle = True
+            self.grid[x][y].is_obstacle = True
 
         # Provjerava ako postoji put
         self.get_path()
@@ -453,7 +453,7 @@ class Game:
                             col * GRID_SIZE, row * GRID_SIZE, GRID_SIZE, GRID_SIZE
                         ),
                     )
-                elif self.grid[col][row].isObstacle:
+                elif self.grid[col][row].is_obstacle:
                     pygame.draw.rect(
                         self._display_surf,
                         OBSTACLE_COLOR,
