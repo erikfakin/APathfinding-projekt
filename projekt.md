@@ -14,7 +14,7 @@ Primjeri problema koja možemo riješiti pomoću tih algoritama su:
 Graf je skup čvorova povezanih međusobno pomoću bridova. 
 U nekim je problemima potrebno uz čvor dodati i neku vrijednost koja označava njegovu težinu. Na primjer možemo razmišljatu o problemu pronalaska puta između gradova. Svaki grad je čvor u grafu i svaka cesta koje povezuje gradove je brid u grafu. Tada možemo uz čvor dodati i broj koji predstavlja udaljenost između gradova. Možemo si postaviti pitanje koji je najbrži put od jednog do drugog. Jedan način na kojem bismo to mogli učiniti je taj da pogledamo sve mogućnosti koje su nam dostupne. Taj algoritam nebi bio brz i efikasan jer bi trošio računalne i memorijske resurse u ne optimalne smijerove. Postoji bolji način za riješavanje tih problema poput algoritama za pretraživanje. U ovom ćemo radu detaljnije pogledati A* algoritam za pretraživanje.
 
-Za potrebe rada razvili simulaciju igrice u kojoj koristimo A* algoritam za pronalaženje najkraćeg puta od početne do krajnje točke. U simulaciju je moguće dinamički dodati razna polja karakterizirana po brzini kretanja i prepreka. Za prikaz mape koristimo 2D vizualizaciju mreže u kojoj se igrač može kretati samo u vodoravnom i okomitom smjeru. Svaka čelija mape predstavlja čvor u našem grafu i sve su susjedne čelije međusobno povezane.
+Za potrebe rada razvili smo simulaciju igrice u Pythonu u kojoj koristimo A* algoritam za pronalaženje najkraćeg puta od početne do krajnje točke. U simulaciju je moguće dinamički dodati razna polja karakterizirana po brzini kretanja i prepreka. Za prikaz mape koristimo 2D vizualizaciju mreže u kojoj se igrač može kretati samo u vodoravnom i okomitom smjeru. Svaka ćelija mape predstavlja čvor u našem grafu i sve su susjedne čelije međusobno povezane.
 Kod svake promjene na mapu koristmo A* algoritam kako bismo pronašli najbrži put od trenutne pozicije igrača do krajnjeg cilja.
 
 ## Opisati još što ćemo proći u svakom poglavlju
@@ -64,27 +64,70 @@ Najkraći put od vrha $u$ do vrha $v$ tada je definiran kao bilo koji put $p$ s 
 $$f(u) = g(u) + h(u)$$
 *gdje je $g(u)$ procjena optimalne udaljenosti od izvornog čvora do čvora $u$, a $h(u)$ procjena optimalne udaljenosti od čvora $u$ do jednog od njegovih preferiranih ciljnih čvorova. Obično nazivamo $g$ g-ocjena, a $h$ h-ocjena.*
 
+## Dijkstrin algoritam - trebati će modificirati ovo
+
+Da bismo mogli razumjeti pathfinding algoritam A*, prvo moramo razumjeti algoritam na kojem je A* baziran - odnosno ***Dijskstra's algorithm***.
+
+Dijkstrin algoritam je algoritam za pronalaženje najbržeg puta od početnog čvora do bilo kojeg drugog čvora u grafu koristeći *težinu bridova* između susjednih čvorova. Algoritam traži najkraći put tako da uvijek bira čvorove čiji su povezani bridovi najmanje *težine*, a zatim istražuje njegove susjede. Ovaj se postupak ponavlja sve dok se ne pronađe najkraći put od početnog čvora do cilja. 
+
+S Dijkstrinim algoritmom moramo biti oprezni kada imamo graf u kojemu je cilj povezan s čvorovima koji imaju *velike* težine ili barem težine *veće* od čvorova koji se nalaze *dalje* od cilja: 
 
 
+![Alt text](images/dijkstra_graf.png)
 
+**Slika 2**: Graf $G$
 
+Ako počinjemo od čvora $A$ i cilj nam je čvor $C$ i ako je brid $e_2$ *teži* od bridova $e_3,e_4,e_5$ i $e_6$, Dijkstrin algoritam će $e_2$ zadnje provjeriti u cijelom grafu $G$, odnosno provjeravati će bespotrebno sve ostale čvorove. U ovom primjeru to možda nije veliki problem, ali ako uzmete npr. primjenu pathfinding algoritama na navigacijskim sustavima, tada ovo postaje veliki problem zato jer algoritam neće uzeti u obzir *smjer* u kojem treba *šetati*. Rezultat toga je bespotrebno pretraživanje i *šetanje* po nebitnim čvorovima što zauzvrat produžuje vrijeme izračuna najbržeg puta, uz bespotrebnu uporabu računalnih resursa itd.
 
+Zbog tih razloga razvijen je A*, algoritam baziran na Dijkstrinom algoritmu, ali s dodanom funkcijom **heuristike**.
 
-
-# Heuristika
+# Heuristika - i ovo modificirati
 Slijepi postupci raspolažu isključivo egzaktnim informacijama na primjer početnim i trenutnim stanjem i ispitnim predikatom. Možemo poboljšati i ubrzati riješavanje problema ako uz te informacije koristimo i informacije o prirodi problema. Ako otprilike znamo smjer u kojim se nalazi riješenje možemo koristiti tu informaciju u našu korist.
 
 Heuristika je postupak, koji pomoću iskustvena pravila o prirodi problema i osobinama cilja, vodi prema otkriću ili ga potiče.
 
+## A* definicija
 
+A* je pathfinding algoritam koji kombinira funkcionalnost Dijksrinog algoritma s dodatkom heuristika. Pomoću heuristika, algoritam može imati *"smisao smjera"*, odnosno uzeti u obzir preostalu udaljenost u računu težine puta:
 
+$$f(p) = \sum_{i=1}^{k-1} w(e_{i-1}, e_i) + h(v_k)$$
 
+gdje je:
 
+- $f(p)$ ukupna težina puta p s heuristikom,
+- $h(v_k)$ heuristička funkcija za čvor $v_k$, koja označava preostalu udaljenost od trenutnog čvora $v_k$ do cilja.
 
+Ovim A* izbjegava puteve koji se udaljavaju od cilja i omogućava brže i učinkovitije traženje najkraćeg puta.
 
+Za sliku 1 i 2, za funkciju heuristike možemo koristiti doslovnu udaljenost, odnosno euklidsku udaljenost između dva čvora.
 
+![Alt text](images/astarudalj.png)
+
+**Slika 3**: Graf $G$
+
+**Primjer:** za funkciju heuristike $h(v_k)$ od početnog čvora $B$ do ciljanog čvora $G$, funkcija će izgledati:
+
+$$h(B)=7$$
+
+Pošto smo razvili igricu u 2D mreži gdje svaki čvor je reprezentiran kao jedna *ćelija*, za funkciju heuristike $h(v_k)$ ne možemo koristiti euklidsku udaljenost već upotrebljavamo **Manhattan distance** ili **Manhattan udaljenost**.
+
+Manhattan udaljenost je udaljenost između dvije točke u 2D polju, gdje se pomaci mogu izvršavati samo vertikalno ili horizontalno, bez dijagonalnih pomaka.
+
+**Definicija 1.** *Ako su $A$ i $B$ točke u 2D polju, Manhattanova udaljenost između njih je:*
+
+$$D_{\text{Man}} = \left| x_2 - x_1 \right| + \left| y_2 - y_1 \right|$$
+
+*gdje*:
+
+- *$\left| x_2 - x_1 \right|$ predstavlja razliku udaljenosti u horizontalnoj koordinati,*
+- *$\left| y_2 - y_1 \right|$ predstavlja razliku udaljenosti u vertikalnoj koordinati.*
 
 # Simulacija
+
+![Alt text](images/pyemptyfield.png)
+![Alt text](images/pyplayerandgoal.png)
+![Alt text](images/pyrandomfield.png)
+
 # Zaključak
 # Prilozi
 
