@@ -70,7 +70,86 @@ Da bismo mogli razumjeti pathfinding algoritam A*, prvo moramo razumjeti algorit
 
 Dijkstrin algoritam je algoritam za pronalaženje najbržeg puta od početnog čvora do bilo kojeg drugog čvora u grafu koristeći *težinu bridova* između susjednih čvorova. Algoritam traži najkraći put tako da uvijek bira čvorove čiji su povezani bridovi najmanje *težine*, a zatim istražuje njegove susjede. Ovaj se postupak ponavlja sve dok se ne pronađe najkraći put od početnog čvora do cilja. 
 
+### Osnovna ideja Dijkstra algoritma
+
+Osnovna ideja algoritma je sljedeća:
+
+1. Počinjemo od početnog vrha i obilazimo njegove susjede. Svakom susjedu pridruži privremenu udaljenost koja je jednaka težini brida između tog susjeda i početnog vrha.
+
+2. Zatim biramo vrh s najmanjom privremenom udaljenošću i označavamo ga kao trenutni vrh, dok početni vrh označavamo kao posjećen.
+
+3. Algoritam se zatim izvodi na trenutnom vrhu, pri čemu se ažuriraju privremene udaljenosti za njegove neposjećene susjede. Nakon toga, trenutni vrh postaje posjećen.
+
+4. Nakon toga, biramo vrh koji ima najmanju privremenu udaljenost među svim neposjećenim vrhovima i postavljamo ga kao novi trenutni vrh.
+
+5. Ovaj proces se ponavlja dok ne posjetimo sve vrhove u grafu.
+
+6. Pri svakom ažuriranju privremene udaljenosti susjeda trenutnog vrha, pamti se prethodnik (tj. čvor iz kojeg smo došli do tog susjeda). Na taj način, kada neki vrh postane posjećen, možemo rekonstruirati najkraći put od početnog vrha prema tom vrhu, prateći prethodnike od ciljnog vrha do početnog.
+
+
+### Pseudokod za Dijkstra algoritam
+```
+funkcija rekonstruirajPut(prev, cilj):
+    put ← prazna lista
+    trenutni ← cilj
+    
+    dok trenutni ≠ UNDEFINED:
+        dodaj trenutni u početak puta
+        trenutni ← prev[trenutni]
+    
+    return put
+
+
+function Dijkstra(Graph, source, cilj):
+    // Graph.Vertices predstavlja lista vrhova grafa
+    za svaki vrh v u Graph.Vertices:
+        dist[v] ← INFINITY
+        prev[v] ← UNDEFINED
+        dodaj v u Q
+    dist[source] ← 0
+    
+    sve dok Q nije prazan:
+        u ← vrh iz Q s najmanjim dist[u]
+        ukoloni u iz Q
+
+        ako u = cilj:
+            return rekonstruirajPut(prev[], cilj)
+        
+        za svakog susjeda v vrha u koji je još u Q:
+            // Graph.Edges(u, v) predstavlja težinu brida koji spaja vrhove u i v
+            alt ← dist[u] + Graph.Edges(u, v)
+            ako je alt < dist[v]:
+                dist[v] ← alt
+                prev[v] ← u
+
+    return neuspjeh
+```
+
+### Primjer
+
+![Dijkstra korak 1](images/dijkstra-korak-1.png)
+![Dijkstra korak 2](images/dijkstra-korak-2.png)
+![Dijkstra korak 3](images/dijkstra-korak-3.png)
+![Dijkstra korak 4](images/dijkstra-korak-4.png)
+![Dijkstra korak 5](images/dijkstra-korak-5.png)
+![Dijkstra korak 6](images/dijkstra-korak-6.png)
+![Dijkstra korak 7](images/dijkstra-korak-7.png)
+![Dijkstra korak 8](images/dijkstra-korak-8.png)
+![Dijkstra korak 9](images/dijkstra-korak-9.png)
+
+Kad smo u zadnjem koraku odabrali kao trenutni vrh nas cilj završili smo algoritam.
+Prateći prethodnike ciljnog brha dobivamo najkraći put:
+
+$$ A \rightarrow B \rightarrow D \rightarrow E $$
+
+
+
+
+
+
 S Dijkstrinim algoritmom moramo biti oprezni kada imamo graf u kojemu je cilj povezan s čvorovima koji imaju *velike* težine ili barem težine *veće* od čvorova koji se nalaze *dalje* od cilja: 
+
+
 
 
 ![Alt text](images/dijkstra_graf.png)
@@ -80,11 +159,6 @@ S Dijkstrinim algoritmom moramo biti oprezni kada imamo graf u kojemu je cilj po
 Ako počinjemo od čvora $A$ i cilj nam je čvor $C$ i ako je brid $e_2$ *teži* od bridova $e_3,e_4,e_5$ i $e_6$, Dijkstrin algoritam će $e_2$ zadnje provjeriti u cijelom grafu $G$, odnosno provjeravati će bespotrebno sve ostale čvorove. U ovom primjeru to možda nije veliki problem, ali ako uzmete npr. primjenu pathfinding algoritama na navigacijskim sustavima, tada ovo postaje veliki problem zato jer algoritam neće uzeti u obzir *smjer* u kojem treba *šetati*. Rezultat toga je bespotrebno pretraživanje i *šetanje* po nebitnim čvorovima što zauzvrat produžuje vrijeme izračuna najbržeg puta, uz bespotrebnu uporabu računalnih resursa itd.
 
 Zbog tih razloga razvijen je A*, algoritam baziran na Dijkstrinom algoritmu, ali s dodanom funkcijom **heuristike**.
-
-# Heuristika - i ovo modificirati
-Slijepi postupci raspolažu isključivo egzaktnim informacijama na primjer početnim i trenutnim stanjem i ispitnim predikatom. Možemo poboljšati i ubrzati riješavanje problema ako uz te informacije koristimo i informacije o prirodi problema. Ako otprilike znamo smjer u kojim se nalazi riješenje možemo koristiti tu informaciju u našu korist.
-
-Heuristika je postupak, koji pomoću iskustvena pravila o prirodi problema i osobinama cilja, vodi prema otkriću ili ga potiče.
 
 ## A* definicija
 
@@ -98,6 +172,65 @@ gdje je:
 - $h(v_k)$ heuristička funkcija za čvor $v_k$, koja označava preostalu udaljenost od trenutnog čvora $v_k$ do cilja.
 
 Ovim A* izbjegava puteve koji se udaljavaju od cilja i omogućava brže i učinkovitije traženje najkraćeg puta.
+
+### Pseudokod za A* algoritam i rekonstrukciju puta
+
+```
+function rekonstruirajPut(came_from, current):
+    ukupni_put ← current
+    za svaki vrh current u came_from:
+        dodaj current na početku ukupni_put
+    vrati ukupni_put
+
+// A* pronalazi put od početne do ciljne točke.
+// h je heuristička funkcija. h(n) procjenjuje trošak da se dođe do cilja iz čvora n.
+function A_Star(početak, cilj, h):
+    // Skup otkrivenih vrhova.
+    // U početku je samo početni vrh poznat.
+    otvoreni_skup ← prazan skup
+    dodaj početak u otvoreni_skup
+
+    // Za vrh n, came_from[n] je vrh koji neposredno prethodi vrhu n na najjeftinijem putu
+    // od početka do n trenutno poznatom.
+    came_from ← prazan skup
+
+    // Za vrh n, g[n] je trenutno poznati trošak najjeftinijeg puta od početka do n.
+    g ← mapa s početnom vrijednošću Beskonačno
+    g[početak] ← 0
+
+    // Za vrh n, f[n] ← g[n] + h(n). f[n] predstavlja našu trenutnu najbolju procjenu
+    f ← mapa s početnom vrijednošću Beskonačno
+    f[početak] ← h(početak)
+
+    dok otvoreni_skup nije prazan:
+
+        trenutni ← vrh u otvorenom skupu s najmanjom f[] vrijednošću
+        ako trenutni = cilj:
+            return rekonstruirajPut(came_from, trenutni)
+
+        ukloni trenutni iz otvoreni_skup
+  
+        za svaki susjed trenutnog vrha:
+
+            // tentativni_g je udaljenost od početka do susjeda kroz trenutni vrh
+            tentativni_g ← g[trenutni] + težina grane od trenutnog do susjeda
+            ako je tentativni_g < g[susjed]:
+                // Ovaj put do susjeda je bolji od bilo kojeg prethodnog. Zabilježi ga!
+                came_from[susjed] ← trenutni
+                g[susjed] ← tentativni_g
+                f[susjed] ← tentativni_g + h(susjed)
+                ako susjed nije u otvorenom skupu:
+                    dodaj susjed u otvoreni_skup
+
+
+    // Otvoreni skup je prazan, ali cilj nikada nije postignut
+    return neuspjeh
+```
+
+# Heuristika - i ovo modificirati
+Slijepi postupci raspolažu isključivo egzaktnim informacijama na primjer početnim i trenutnim stanjem i ispitnim predikatom. Možemo poboljšati i ubrzati riješavanje problema ako uz te informacije koristimo i informacije o prirodi problema. Ako otprilike znamo smjer u kojim se nalazi riješenje možemo koristiti tu informaciju u našu korist.
+
+Heuristika je postupak, koji pomoću iskustvena pravila o prirodi problema i osobinama cilja, vodi prema otkriću ili ga potiče.
 
 Za sliku 1 i 2, za funkciju heuristike možemo koristiti doslovnu udaljenost, odnosno euklidsku udaljenost između dva čvora.
 
