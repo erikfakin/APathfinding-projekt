@@ -18,7 +18,7 @@ Za potrebe rada razvili smo simulaciju igrice u Pythonu u kojoj koristimo A* alg
 Kod svake promjene na mapu koristmo A* algoritam kako bismo pronašli najbrži put od trenutne pozicije igrača do krajnjeg cilja.
 
 ## Opisati još što ćemo proći u svakom poglavlju
-## Poglavlje 2.
+
 # 2. A* algoritam
 
 ## 2.1 Osnovni pojmovi
@@ -162,7 +162,10 @@ Zbog tih razloga razvijen je A*, algoritam baziran na Dijkstrinom algoritmu, ali
 
 ## A* definicija
 
-A* je pathfinding algoritam koji kombinira funkcionalnost Dijksrinog algoritma s dodatkom heuristika. Pomoću heuristika, algoritam može imati *"smisao smjera"*, odnosno uzeti u obzir preostalu udaljenost u računu težine puta:
+A* algoritam ili algoritam usmjerenog pretraživanja je pathfinding algoritam koji 
+kombinira funkcionalnost Dijksrinog algoritma s dodatkom heuristička funkcije. 
+Pomoću heuristićka funkcije, algoritam ima *"smisao smjera"*, odnosno uzima u obzir
+preostalu udaljenost u računu težine puta:
 
 $$f(p) = \sum_{i=1}^{k-1} w(e_{i-1}, e_i) + h(v_k)$$
 
@@ -171,7 +174,19 @@ gdje je:
 - $f(p)$ ukupna težina puta p s heuristikom,
 - $h(v_k)$ heuristička funkcija za čvor $v_k$, koja označava preostalu udaljenost od trenutnog čvora $v_k$ do cilja.
 
-Ovim A* izbjegava puteve koji se udaljavaju od cilja i omogućava brže i učinkovitije traženje najkraćeg puta.
+Ovim A* je brži od Dijkstrinog, ali pouzdano pronalazi optimalne putanje samo pod određenim uvjetom.
+
+**Definicija 2.12.** *Heuristika h se smatra prihvatljivom ako i samo ako, za svaki $u ∈ V, h(u)$ nikada ne precjenjuje stvarni trošak kretanja od $u$ do preferiranog ciljnog čvora, tj. $∀u ∈ V, h(u) ≤ ˆh(u).$*
+
+Ako heuristika nije prihvatljiva, to znači da može doći do precjenjivanja stvarnog troška kretanja od trenutnog čvora do cilja. U tom slučaju, algoritam može donijeti pogrešne odluke prilikom odabira puta, jer će heuristika pretpostaviti manji trošak nego što zapravo postoji, što može rezultirati neoptimalnim ili čak pogrešnim rješenjem.
+
+Na primjer, u A* algoritmu, ako heuristika precjenjuje stvarni trošak, algoritam može izabrati put koji izgleda bolje zbog manjih procjena troškova, ali koji zapravo nije najkraći. To može dovesti do toga da A* algoritam ne pronađe optimalnu putanju ili bude sporiji nego što bi bio s prihvatljivom heuristikom.
+
+Kada bi za heurističku funkciju uzeli $h(v) = 0$, A* se svodi na Dijkstrin algoritam.
+
+
+
+
 
 ### Pseudokod za A* algoritam i rekonstrukciju puta
 
@@ -227,7 +242,7 @@ function A_Star(početak, cilj, h):
     return neuspjeh
 ```
 
-# Heuristika - i ovo modificirati
+# 3. Heuristika
 Slijepi postupci raspolažu isključivo egzaktnim informacijama na primjer početnim i trenutnim stanjem i ispitnim predikatom. Možemo poboljšati i ubrzati riješavanje problema ako uz te informacije koristimo i informacije o prirodi problema. Ako otprilike znamo smjer u kojim se nalazi riješenje možemo koristiti tu informaciju u našu korist.
 
 Heuristika je postupak, koji pomoću iskustvena pravila o prirodi problema i osobinama cilja, vodi prema otkriću ili ga potiče.
@@ -242,20 +257,41 @@ Za sliku 1 i 2, za funkciju heuristike možemo koristiti doslovnu udaljenost, od
 
 $$h(B)=7$$
 
-Pošto smo razvili igricu u 2D mreži gdje svaki čvor je reprezentiran kao jedna *ćelija*, za funkciju heuristike $h(v_k)$ ne možemo koristiti euklidsku udaljenost već upotrebljavamo **Manhattan distance** ili **Manhattan udaljenost**.
+U simulaciji kao heuristiku koristit ćemo udaljenost trenutnog čvora i odabranog cilj.
+Kako bismo računali udaljenost između dva čvora možemo koristiti razne metode npr.:
+- **Euklidska udaljenost (Euclidean Distance)**:  
+  Ovo je najčešći način izračunavanja udaljenosti u prostoru kada imamo dva čvora s koordinatama $(x_1, y_1)$ i $(x_2, y_2)$.  
+  Formula:  
+  $$
+  d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
+  $$  
+  Koristi se kada želimo izračunati stvarnu udaljenost između dvaju čvorova u ravnini.
 
-Manhattan udaljenost je udaljenost između dvije točke u 2D polju, gdje se pomaci mogu izvršavati samo vertikalno ili horizontalno, bez dijagonalnih pomaka.
+- **Manhattanska udaljenost (Manhattan Distance)**:  
+  Ova udaljenost se koristi kada se dopuštaju samo horizontalna i vertikalna kretanja (kao u mreži kvadrata, bez dijagonala).  
+  Formula:  
+  $$
+  d = |x_2 - x_1| + |y_2 - y_1|
+  $$  
+  Ovaj način je koristan kada ne možete kretati dijagonalno, kao što je slučaj u mrežama poput tih u računalnim igrama.
 
-**Definicija 1.** *Ako su $A$ i $B$ točke u 2D polju, Manhattanova udaljenost između njih je:*
+- **Chebyshevova udaljenost (Chebyshev Distance)**:  
+  Ova udaljenost je pogodna za kretanje u mreži gdje je dopušteno kretanje u svim smjerovima (i dijagonalno).  
+  Formula:  
+  $$
+  d = \max(|x_2 - x_1|, |y_2 - y_1|)
+  $$  
+  Ova udaljenost je korisna u igrama ili problemima gdje su svi smjerovi jednako dopušteni, uključujući dijagonale.
 
-$$D_{\text{Man}} = \left| x_2 - x_1 \right| + \left| y_2 - y_1 \right|$$
+Po **Definicija 2.12** sve su tri udaljenosti kao heuristike prihvatiljive u simulaciji jer ne precjenjuju udaljenost u 2D mreži.
 
-*gdje*:
+Kako možemo vidjeti sa simulacije vrijeme izvoženja algoritma ovisan je o odabiru heuristike.
 
-- *$\left| x_2 - x_1 \right|$ predstavlja razliku udaljenosti u horizontalnoj koordinati,*
-- *$\left| y_2 - y_1 \right|$ predstavlja razliku udaljenosti u vertikalnoj koordinati.*
+Pošto smo razvili igricu u 2D mreži u kojoj je dozvoljeno se kretati samo horizontalno i vertikalno, za funkciju heuristike $h(v_k)$ **Manhattan distance** ili **Manhattan udaljenost** najbolje procijenjuje udaljenost i zbog toga nam daje bolje performanse jer istražuje najmanji broj čvorova.
 
-# Simulacija
+
+
+# 4. Simulacija
 
 ![Alt text](images/pyemptyfield.png)
 ![Alt text](images/pyplayerandgoal.png)
