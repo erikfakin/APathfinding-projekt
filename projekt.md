@@ -17,7 +17,46 @@ U nekim je problemima potrebno uz čvor dodati i neku vrijednost koja označava 
 Za potrebe rada razvili smo simulaciju igrice u Pythonu u kojoj koristimo A* algoritam za pronalaženje najkraćeg puta od početne do krajnje točke. U simulaciju je moguće dinamički dodati razna polja karakterizirana po brzini kretanja i prepreka. Za prikaz mape koristimo 2D vizualizaciju mreže u kojoj se igrač može kretati samo u vodoravnom i okomitom smjeru. Svaka ćelija mape predstavlja čvor u našem grafu i sve su susjedne čelije međusobno povezane.
 Kod svake promjene na mapu koristmo A* algoritam kako bismo pronašli najbrži put od trenutne pozicije igrača do krajnjeg cilja.
 
-## Opisati još što ćemo proći u svakom poglavlju
+## Pregled poglavlja
+
+### 2. A* algoritam
+
+- Definirati ćemo **osnovne pojmove vezane s grafom**:
+    1. vrhovi, odnosno čvorovi i bridovi grafa,
+    2. šetnja u grafu,
+    3. staza i put,
+    4. povezanost čvorova,
+    5. nasljednik čvora,
+    6. težina puta.
+
+- Objasniti ćemo bazu A* algoritma, odnosno **Dijkstra's algorithm**:
+    1. osnovna ideja,
+    2. pseudokod,
+    3. mogući problemi kod Dijkstrinog algoritma.
+
+- Objasniti ćemo sam **A*** **algoritam**:
+    1. definicija,
+    2. prednosti u odnosu na Dijkstrin algoritam,
+    3. osnovni uvod u heuristiku A*-a,
+    4. mogući problemi kod neispravno odabrane heuristike,
+    5. pseudokod.
+
+### 3. Heuristika
+
+- Definirati ćemo detaljnije **heuristiku** i objasniti **njenu primjenu u A***:
+    1. definicija,
+    2. par heuristika za A*.
+
+### 4. Simulacija
+
+- Ukratko ćemo opisati video igru za simuliaciju pathfindinga razvijenu u Pythonu:
+    1. značajke video igre,
+    2. informacije vezane za izračun najkraćeg puta i potrebno vrijeme za njegov izračun,
+    3. screenshotovi video igre.
+
+### 5. Zaključak
+
+### 6. Literatura
 
 # 2. A* algoritam
 
@@ -64,7 +103,7 @@ Najkraći put od vrha $u$ do vrha $v$ tada je definiran kao bilo koji put $p$ s 
 $$f(u) = g(u) + h(u)$$
 *gdje je $g(u)$ procjena optimalne udaljenosti od izvornog čvora do čvora $u$, a $h(u)$ procjena optimalne udaljenosti od čvora $u$ do jednog od njegovih preferiranih ciljnih čvorova. Obično nazivamo $g$ g-ocjena, a $h$ h-ocjena.*
 
-## Dijkstrin algoritam - trebati će modificirati ovo
+## Dijkstrin algoritam
 
 Da bismo mogli razumjeti pathfinding algoritam A*, prvo moramo razumjeti algoritam na kojem je A* baziran - odnosno ***Dijskstra's algorithm***.
 
@@ -154,9 +193,9 @@ S Dijkstrinim algoritmom moramo biti oprezni kada imamo graf u kojemu je cilj po
 
 ![Alt text](images/dijkstra_graf.png)
 
-**Slika 2**: Graf $G$
+**Slika 2**: Graf $H$
 
-Ako počinjemo od čvora $A$ i cilj nam je čvor $C$ i ako je brid $e_2$ *teži* od bridova $e_3,e_4,e_5$ i $e_6$, Dijkstrin algoritam će $e_2$ zadnje provjeriti u cijelom grafu $G$, odnosno provjeravati će bespotrebno sve ostale čvorove. U ovom primjeru to možda nije veliki problem, ali ako uzmete npr. primjenu pathfinding algoritama na navigacijskim sustavima, tada ovo postaje veliki problem zato jer algoritam neće uzeti u obzir *smjer* u kojem treba *šetati*. Rezultat toga je bespotrebno pretraživanje i *šetanje* po nebitnim čvorovima što zauzvrat produžuje vrijeme izračuna najbržeg puta, uz bespotrebnu uporabu računalnih resursa itd.
+Ako počinjemo od čvora $A$ i cilj nam je čvor $C$ i ako je brid $e_2$ *teži* od bridova $e_3,e_4,e_5$ i $e_6$, Dijkstrin algoritam će $e_2$ zadnje provjeriti u cijelom grafu $H$, odnosno provjeravati će bespotrebno sve ostale čvorove. U ovom primjeru to možda nije veliki problem, ali ako uzmete npr. primjenu pathfinding algoritama na navigacijskim sustavima, tada ovo postaje veliki problem zato jer algoritam neće uzeti u obzir *smjer* u kojem treba *šetati*. Rezultat toga je bespotrebno pretraživanje i *šetanje* po nebitnim čvorovima što zauzvrat produžuje vrijeme izračuna najbržeg puta, uz bespotrebnu uporabu računalnih resursa itd.
 
 Zbog tih razloga razvijen je A*, algoritam baziran na Dijkstrinom algoritmu, ali s dodanom funkcijom **heuristike**.
 
@@ -251,7 +290,7 @@ Za sliku 1 i 2, za funkciju heuristike možemo koristiti doslovnu udaljenost, od
 
 ![Alt text](images/astarudalj.png)
 
-**Slika 3**: Graf $G$
+**Slika 3**: Graf $H$
 
 **Primjer:** za funkciju heuristike $h(v_k)$ od početnog čvora $B$ do ciljanog čvora $G$, funkcija će izgledati:
 
@@ -293,10 +332,36 @@ Pošto smo razvili igricu u 2D mreži u kojoj je dozvoljeno se kretati samo hori
 
 # 4. Simulacija
 
+Razvili smo igricu u Pythonu pomoću paketa Pygame u kojoj korisnik može postaviti početnu točku (na kojoj se nalazi igrač), cilj, prepreke i polja s različitim "težinama" na gridu veličine 40x30. Implementirani A* algoritam izračunava najkraći put uzimajući u obzir prepreke i polja s povećanom težinom te biti će prikazan na gridu.
+
+Korisnik može pokrenuti simulaciju kretanja igrača po izračunatom putu, pomagati igraču da dođe do cilja ili postavljati prepreke dok se igrač još miče. Možemo u *real time-u* vidjeti kako algoritam izračunava put u odnosnu na nove prepreke/polja s povećanom težinom. Također, korisnik može po potrebi zaustaviti simulaciju kretanja.
+
+Korisnik može obrisati sve prepreke i polja s većim težinama ili nasumično postaviti prepreke po gridu jednim klikom.
+
+U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za izračunavanje najkraćeg puta, kao i ukupni trošak (cost), koji predstavlja sumu težina svih koraka na najkraćem putu. Težine polja su: zeleno polje ima težinu 1, bež polje težinu 2 a narančasto polje težinu 3.
+
 ![Alt text](images/pyemptyfield.png)
+
+**Slika 4**: Prazan grid bez prepreka, cilja ili igrača
+
 ![Alt text](images/pyplayerandgoal.png)
+
+**Slika 5**: Grid s igračem, ciljem i prikazanim najkraćim putem od igrača do cilja
+
 ![Alt text](images/pyrandomfield.png)
 
-# Zaključak
-# Prilozi
+**Slika 6**: Grid sa preprekama i poljima povećane težine, uz prikaz najkraćeg puta od igrača do cilja
 
+# 5. Zaključak
+
+A* algoritam je vrlo moćan pathfinding algoritam koncepiran na bazi Dijkstrinog algoritma s dodanom heurističkom funkcijom radi bržeg i učinkovitijeg pronalaženja najkraćeg puta. Heuristika A* algoritma ovisi o prirodi problema kojeg se pokušava rješiti pomoću pathfindinga, te pokazali smo par od mnogobrojnih mogućnosti odabira heuristika. Kroz našu simulaciju pathfindinga u video igri možete vidjeti primjer primjene A* s Manhattanovom heuristikom.
+
+Iz ovog projekta možemo zaključiti da primjena A* algoritma s pravilno odabranom heurističkom funkcijom rezultira vrlo moćinm i učinkovitim rješenjem za pronalaženje puta, što ga čini primjenjivim u različitim područjima - od računalnih igara do navigacijskih sustava i robotike.
+
+# 6. Literatura
+
+[Computerphile. (2017, 4. siječnja). *Dijkstra's algorithm*](https://www.youtube.com/watch?v=GazC3A4OQTE) [YouTube].
+
+[Computerphile. (2017, 15. veljače). *A** *(A Star) search algorithm*](https://www.youtube.com/watch?v=ySN5Wnu88nE) [YouTube].
+
+[Heuristic](https://en.wikipedia.org/wiki/Heuristic). (2025, 22. siječnja). *Wikipedia*.
