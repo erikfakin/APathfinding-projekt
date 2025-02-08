@@ -338,6 +338,9 @@ Korisnik može pokrenuti simulaciju kretanja igrača po izračunatom putu, pomag
 
 Korisnik može obrisati sve prepreke i polja s većim težinama ili nasumično postaviti prepreke po gridu jednim klikom.
 
+Sa desne stane korisnik može izabrati sa kojom heuristikom će se izračunati put, odabir je izmđu Euklidske udaljenosti, Manhattanske udaljenosti i Chebyshevove udaljenosti.
+Za potrebe ove simulacije smo kao zadanu vrijednost postavili Manhattansku udaljenost kako najviše odgovara potrebama simulacije.
+
 U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za izračunavanje najkraćeg puta, kao i ukupni trošak (cost), koji predstavlja sumu težina svih koraka na najkraćem putu. Težine polja su: zeleno polje ima težinu 1, bež polje težinu 2 a narančasto polje težinu 3.
 
 ![Alt text](images/pyemptyfield.png)
@@ -354,7 +357,7 @@ U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za 
 
 # 5. Zaključak
 
-A* algoritam je vrlo moćan pathfinding algoritam koncepiran na bazi Dijkstrinog algoritma s dodanom heurističkom funkcijom radi bržeg i učinkovitijeg pronalaženja najkraćeg puta. Heuristika A* algoritma ovisi o prirodi problema kojeg se pokušava rješiti pomoću pathfindinga, te pokazali smo par od mnogobrojnih mogućnosti odabira heuristika. Kroz našu simulaciju pathfindinga u video igri možete vidjeti primjer primjene A* s Manhattanovom heuristikom.
+A* algoritam je vrlo moćan pathfinding algoritam koncepiran na bazi Dijkstrinog algoritma s dodanom heurističkom funkcijom radi bržeg i učinkovitijeg pronalaženja najkraćeg puta. Heuristika A* algoritma ovisi o prirodi problema kojeg se pokušava rješiti pomoću pathfindinga, te pokazali smo par od mnogobrojnih mogućnosti odabira heuristika. Kroz našu simulaciju pathfindinga u video igri možete vidjeti primjer primjene A* s Manhattanovom, Euklidskom i Chebyshevom heuristikom.
 
 Iz ovog projekta možemo zaključiti da primjena A* algoritma s pravilno odabranom heurističkom funkcijom rezultira vrlo moćinm i učinkovitim rješenjem za pronalaženje puta, što ga čini primjenjivim u različitim područjima - od računalnih igara do navigacijskih sustava i robotike.
 

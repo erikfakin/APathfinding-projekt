@@ -175,8 +175,16 @@ class Dropdown:
             (0, 0, 0),
         )
         screen.blit(text, (self.rect.x + 10, self.rect.y + 10))
+       
 
         if self.dropdown_open:
+            dropdown_bg_rect = pygame.Rect(
+                    self.rect.x,
+                    self.rect.y + 3 * self.rect.height,
+                    self.rect.width,
+                    self.rect.height,
+                )
+            pygame.draw.rect(screen, (230, 230, 230), dropdown_bg_rect)
             self.option_rects = []
             for i, option in enumerate(self.options):
                 option_rect = pygame.Rect(
@@ -187,6 +195,7 @@ class Dropdown:
                 )
                 self.option_rects.append(option_rect)
                 pygame.draw.rect(screen, (230, 230, 230), option_rect)
+                pygame.draw.rect(screen, BLACK_COLOR, option_rect, 1) 
                 option_text = font.render(option, True, (0, 0, 0))
                 screen.blit(option_text, (option_rect.x + 10, option_rect.y + 10))
 
@@ -230,14 +239,16 @@ class TextDisplay:
         self.text = ""  # Default empty text
 
     def set_text(self, text):
-        """Set the text to be displayed and render it."""
-        self.text = text
-        self.text_surface = self.font.render(self.text, True, self.color)
+        """Set the text as a list of lines."""
+        self.text_lines = text.split("\n")  # Split into multiple lines
 
     def draw(self, surface):
-        """Draw the rendered text on the specified surface."""
-        if self.text_surface:
-            surface.blit(self.text_surface, self.position)
+        """Draw each line of text with spacing."""
+        y_offset = 0
+        for line in self.text_lines:
+            text_surface = self.font.render(line, True, self.color)
+            surface.blit(text_surface, (self.position[0], self.position[1] + y_offset))
+            y_offset += self.font.get_height() + 5  # Add spacing between lines
 
 
 class Button:
@@ -324,6 +335,7 @@ class Game:
         # za 60 fps
         self.clock = pygame.time.Clock()
         self.fps = 60
+    
 
     # Inicijalizira Pygame, parametre mreze, pocetnu i zavrsnu tocku, generira nasumicne prepreke, postavlja prozor i tipke.
     def on_init(self):
@@ -335,7 +347,7 @@ class Game:
         self.generate_random_obstacles()
 
         self.heuristic_dropdown = Dropdown(
-            (810, 250),
+            (810, 230),
             (180, 40),
             ["Manhattan", "Euclidean", "Chebyshev"],
             self.on_heuristic_selected,
@@ -357,9 +369,26 @@ class Game:
         self.time_display = TextDisplay((810, MAP_HEIGHT - 50))
         self.length_display = TextDisplay((810, MAP_HEIGHT - 100))
 
-        self.heuristic_text = TextDisplay((810, 230))
+        self.heuristic_text = TextDisplay((810, 210))
         self.heuristic_text.set_text("Heuristika:")
-
+        
+        self.controls_text = TextDisplay((810, 290))
+        self.controls_text.set_text(
+            "Controls:"
+        )
+        self.controls_list_text = TextDisplay((815, 315),font_size=22)
+        self.controls_list_text.set_text(
+            "LMB: Add Obstacle\n"
+            "RMB: Clear Obstacle\n"
+            "1: Set Cost 1\n"
+            "2: Set Cost 2\n"
+            "3: Set Cost 3\n"
+            "S: Set Start\n"
+            "E: Set End"
+        )
+      
+        
+        
         self._running = True
 
     # Obraduje dogadaje u igri poput klikanja i tipkanja
@@ -457,12 +486,16 @@ class Game:
         for button in self.buttons:
             button.draw(self._display_surf)
 
-        self.heuristic_dropdown.draw(self._display_surf)  # Draw the heuristic dropdown
+        controls_bg_rect = pygame.Rect(810, 310, 180, 145)
+        pygame.draw.rect(self._display_surf, (230, 230, 230), controls_bg_rect)  
+       
 
         self.time_display.draw(self._display_surf)
         self.length_display.draw(self._display_surf)
         self.heuristic_text.draw(self._display_surf)
-
+        self.controls_text.draw(self._display_surf)
+        self.controls_list_text.draw(self._display_surf)
+        self.heuristic_dropdown.draw(self._display_surf)  # Draw the heuristic dropdown
         # Azurira ekran
         pygame.display.flip()
 
