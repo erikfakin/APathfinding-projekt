@@ -343,15 +343,15 @@ Za potrebe ove simulacije smo kao zadanu vrijednost postavili Manhattansku udalj
 
 U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za izračunavanje najkraćeg puta, kao i ukupni trošak (cost), koji predstavlja sumu težina svih koraka na najkraćem putu. Težine polja su: zeleno polje ima težinu 1, bež polje težinu 2 a narančasto polje težinu 3.
 
-![Alt text](images/pyemptyfield.png)
+![Alt text](images/simulacija1.jpg)
 
 **Slika 4**: Prazan grid bez prepreka, cilja ili igrača
 
-![Alt text](images/pyplayerandgoal.png)
+![Alt text](images/simulacija2.jpg)
 
 **Slika 5**: Grid s igračem, ciljem i prikazanim najkraćim putem od igrača do cilja
 
-![Alt text](images/pyrandomfield.png)
+![Alt text](images/simulacija3.jpg)
 
 **Slika 6**: Grid sa preprekama i poljima povećane težine, uz prikaz najkraćeg puta od igrača do cilja
 
@@ -363,8 +363,12 @@ Iz ovog projekta možemo zaključiti da primjena A* algoritma s pravilno odabran
 
 # 6. Literatura
 
-[Computerphile. (2017, 4. siječnja). *Dijkstra's algorithm*](https://www.youtube.com/watch?v=GazC3A4OQTE) [YouTube].
+[Computerphile. (2017, 4. siječnja). *Dijkstra's algorithm*](https://www.youtube.com/watch?v=GazC3A4OQTE) *YouTube*
 
-[Computerphile. (2017, 15. veljače). *A** *(A Star) search algorithm*](https://www.youtube.com/watch?v=ySN5Wnu88nE) [YouTube].
+[Computerphile. (2017, 15. veljače). *A** *(A Star) search algorithm*](https://www.youtube.com/watch?v=ySN5Wnu88nE) *YouTube*
 
 [Heuristic](https://en.wikipedia.org/wiki/Heuristic). (2025, 22. siječnja). *Wikipedia*.
+
+[Daniel Monzonís Laparra *Pathfinding algorithms in graphs and applications*, Departament de Matemàtiques i Informàtica Barcelona, January 15, 2019](https://diposit.ub.edu/dspace/bitstream/2445/140466/1/memoria.pdf) *PDF*
+
+[Filip Vuković *Algoritmi najkraćeg puta na grafovima i njihova primjena u cestovnoj navigaciji*, Sveučilište J. J. Strossmayera u Osijeku, Odjel za matematiku, Osijek, 2020.](https://www.mathos.unios.hr/~mdjumic/uploads/diplomski/VUK39.pdf) *PDF*
