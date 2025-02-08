@@ -376,7 +376,7 @@ class Game:
         self.controls_text.set_text(
             "Controls:"
         )
-        self.controls_list_text = TextDisplay((815, 315),font_size=25)
+        self.controls_list_text = TextDisplay((815, 315),font_size=22)
         self.controls_list_text.set_text(
             "LMB: Add Obstacle\n"
             "RMB: Clear Obstacle\n"
@@ -486,8 +486,8 @@ class Game:
         for button in self.buttons:
             button.draw(self._display_surf)
 
-        controls_bg_rect = pygame.Rect(810, 310, 180, 160)
-        pygame.draw.rect(self._display_surf, (200, 200, 200), controls_bg_rect)  
+        controls_bg_rect = pygame.Rect(810, 310, 180, 145)
+        pygame.draw.rect(self._display_surf, (230, 230, 230), controls_bg_rect)  
        
 
         self.time_display.draw(self._display_surf)
