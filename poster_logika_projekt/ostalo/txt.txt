@@ -1,0 +1,26 @@
+inkscape
+--------
+
+uvod
+
+cilj
+
+ulaz i izlaz -> simulacija
+
+literatura
+
++ 4? :
+
+dijkstra
+a*
+heuristike (opcenito - i specificno za a*)
+
+specificne primjene?
+
+
+sav text u wordu pa screenat? formule  bi se tamo mogle raditi
+
+
+• Pazite da je font dovoljno velik da se može čitati s udaljenosti od barem
+jednog metra. Naslovi bi trebali biti veličine najmanje 80 pt, dok tekst
+tijela treba biti između 24 i 32 pt.

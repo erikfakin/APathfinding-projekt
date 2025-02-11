@@ -203,7 +203,7 @@ Zbog tih razloga razvijen je A*, algoritam baziran na Dijkstrinom algoritmu, ali
 
 A* algoritam ili algoritam usmjerenog pretraživanja je pathfinding algoritam koji 
 kombinira funkcionalnost Dijksrinog algoritma s dodatkom heuristička funkcije. 
-Pomoću heuristićka funkcije, algoritam ima *"smisao smjera"*, odnosno uzima u obzir
+Pomoću heurističke funkcije, algoritam ima *"smisao smjera"*, odnosno uzima u obzir
 preostalu udaljenost u računu težine puta:
 
 $$f(p) = \sum_{i=1}^{k-1} w(e_{i-1}, e_i) + h(v_k)$$
@@ -363,12 +363,12 @@ Iz ovog projekta možemo zaključiti da primjena A* algoritma s pravilno odabran
 
 # 6. Literatura
 
-[Computerphile. (2017, 4. siječnja). *Dijkstra's algorithm*](https://www.youtube.com/watch?v=GazC3A4OQTE) *YouTube*
+[1] Computerphile, *Dijkstra's algorithm*, YouTube, 4. siječnja 2017. [Online]. Dostupno: https://www.youtube.com/watch?v=Te5xC2F1JXg. [Pristupljeno: 14. siječnja 2025.]
 
-[Computerphile. (2017, 15. veljače). *A** *(A Star) search algorithm*](https://www.youtube.com/watch?v=ySN5Wnu88nE) *YouTube*
+[2] Computerphile, *A** *(A Star) search algorithm*, YouTube, 15. veljače 2017. [Online]. Dostupno: https://www.youtube.com/watch?v=ySN5Wnu88nE. [Pristupljeno: 14. siječnja 2025.]
 
-[Heuristic](https://en.wikipedia.org/wiki/Heuristic). (2025, 22. siječnja). *Wikipedia*.
+[3] *Heuristic*, Wikipedia, 22. siječnja 2025. [Online]. Dostupno: https://en.wikipedia.org/wiki/Heuristic. [Pristupljeno: 14. siječnja 2025.]
 
-[Daniel Monzonís Laparra *Pathfinding algorithms in graphs and applications*, Departament de Matemàtiques i Informàtica Barcelona, January 15, 2019](https://diposit.ub.edu/dspace/bitstream/2445/140466/1/memoria.pdf) *PDF*
+[4] D. M. Laparra, *Pathfinding algorithms in graphs and applications*, Departament de Matemàtiques i Informàtica Barcelona, 15. siječnja 2019. [Online]. Dostupno: https://diposit.ub.edu/dspace/bitstream/2445/140466/1/memoria.pdf. [Pristupljeno: 17. siječnja 2025.]
 
-[Filip Vuković *Algoritmi najkraćeg puta na grafovima i njihova primjena u cestovnoj navigaciji*, Sveučilište J. J. Strossmayera u Osijeku, Odjel za matematiku, Osijek, 2020.](https://www.mathos.unios.hr/~mdjumic/uploads/diplomski/VUK39.pdf) *PDF*
+[5] F. Vuković, *Algoritmi najkraćeg puta na grafovima i njihova primjena u cestovnoj navigaciji*, Sveučilište J. J. Strossmayera u Osijeku, Odjel za matematiku, 2020. [Online]. Dostupno: https://www.mathos.unios.hr/~mdjumic/uploads/diplomski/VUK39.pdf. [Pristupljeno: 17. siječnja 2025.]
