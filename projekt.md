@@ -1,3 +1,5 @@
+# Optimizacija ruta u videoigrama: modeliranje grafova za pronalazak optimalnih putova NPC-ova u videoigrama u stvarnom vremenu
+
 # 1. Uvod
 Mnogi se problemi u domeni informatike i znanosti mogu generalizirati kao pronalaženje puta u grafovima.
 Algoritmi pretraživanja su stoga vrlo bitni.
@@ -175,7 +177,9 @@ gdje je:
 
 Ovim A* je brži od Dijkstrinog, ali pouzdano pronalazi optimalne putanje samo pod određenim uvjetom.
 
-**Definicija 2.12.** *Heuristika h se smatra prihvatljivom ako i samo ako, za svaki $u ∈ V, h(u)$ nikada ne precjenjuje stvarni trošak kretanja od $u$ do preferiranog ciljnog čvora, tj. $∀u ∈ V, h(u) ≤ ˆh(u).$*
+**Definicija 2.12.** *Heuristika h se smatra prihvatljivom ako i samo ako, za svaki $u ∈ V, h(u)$ nikada ne precjenjuje stvarni trošak kretanja od $u$ do preferiranog ciljnog čvora, tj. $∀u ∈ V, h(u) ≤ \hat{h}(u).$*
+
+Stvarni trošak $\hat{h}(u)$ predstavlja najmanju moguću (optimalnu) cijenu puta od čvora $𝑢$ do ciljnog čvora. To znači da prihvatljiva heuristika uvijek daje procjenu koja je manja ili jednaka stvarnom minimalnom trošku, čime se osigurava da pretraga A* pronađe optimalno rješenje.
 
 Ako heuristika nije prihvatljiva, to znači da može doći do precjenjivanja stvarnog troška kretanja od trenutnog čvora do cilja. U tom slučaju, algoritam može donijeti pogrešne odluke prilikom odabira puta, jer će heuristika pretpostaviti manji trošak nego što zapravo postoji, što može rezultirati neoptimalnim ili čak pogrešnim rješenjem.
 
