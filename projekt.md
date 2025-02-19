@@ -31,15 +31,13 @@ Kod svake promjene na mapu koristmo A* algoritam kako bismo pronašli najbrži p
 
 - Objasniti ćemo bazu A* algoritma, odnosno **Dijkstra's algorithm**:
     1. osnovna ideja,
-    2. pseudokod,
-    3. mogući problemi kod Dijkstrinog algoritma.
+    2. mogući problemi kod Dijkstrinog algoritma.
 
 - Objasniti ćemo sam **A*** **algoritam**:
     1. definicija,
     2. prednosti u odnosu na Dijkstrin algoritam,
     3. osnovni uvod u heuristiku A*-a,
-    4. mogući problemi kod neispravno odabrane heuristike,
-    5. pseudokod.
+    4. mogući problemi kod neispravno odabrane heuristike.
 
 ### 3. Heuristika
 
@@ -126,44 +124,6 @@ Osnovna ideja algoritma je sljedeća:
 6. Pri svakom ažuriranju privremene udaljenosti susjeda trenutnog vrha, pamti se prethodnik (tj. čvor iz kojeg smo došli do tog susjeda). Na taj način, kada neki vrh postane posjećen, možemo rekonstruirati najkraći put od početnog vrha prema tom vrhu, prateći prethodnike od ciljnog vrha do početnog.
 
 
-### Pseudokod za Dijkstra algoritam
-```
-funkcija rekonstruirajPut(prev, cilj):
-    put ← prazna lista
-    trenutni ← cilj
-    
-    dok trenutni ≠ UNDEFINED:
-        dodaj trenutni u početak puta
-        trenutni ← prev[trenutni]
-    
-    return put
-
-
-function Dijkstra(Graph, source, cilj):
-    // Graph.Vertices predstavlja lista vrhova grafa
-    za svaki vrh v u Graph.Vertices:
-        dist[v] ← INFINITY
-        prev[v] ← UNDEFINED
-        dodaj v u Q
-    dist[source] ← 0
-    
-    sve dok Q nije prazan:
-        u ← vrh iz Q s najmanjim dist[u]
-        ukoloni u iz Q
-
-        ako u = cilj:
-            return rekonstruirajPut(prev[], cilj)
-        
-        za svakog susjeda v vrha u koji je još u Q:
-            // Graph.Edges(u, v) predstavlja težinu brida koji spaja vrhove u i v
-            alt ← dist[u] + Graph.Edges(u, v)
-            ako je alt < dist[v]:
-                dist[v] ← alt
-                prev[v] ← u
-
-    return neuspjeh
-```
-
 ### Primjer
 
 ![Dijkstra korak 1](images/dijkstra-korak-1.png)
@@ -224,63 +184,6 @@ Na primjer, u A* algoritmu, ako heuristika precjenjuje stvarni trošak, algorita
 Kada bi za heurističku funkciju uzeli $h(v) = 0$, A* se svodi na Dijkstrin algoritam.
 
 
-
-
-
-### Pseudokod za A* algoritam i rekonstrukciju puta
-
-```
-function rekonstruirajPut(came_from, current):
-    ukupni_put ← current
-    za svaki vrh current u came_from:
-        dodaj current na početku ukupni_put
-    vrati ukupni_put
-
-// A* pronalazi put od početne do ciljne točke.
-// h je heuristička funkcija. h(n) procjenjuje trošak da se dođe do cilja iz čvora n.
-function A_Star(početak, cilj, h):
-    // Skup otkrivenih vrhova.
-    // U početku je samo početni vrh poznat.
-    otvoreni_skup ← prazan skup
-    dodaj početak u otvoreni_skup
-
-    // Za vrh n, came_from[n] je vrh koji neposredno prethodi vrhu n na najjeftinijem putu
-    // od početka do n trenutno poznatom.
-    came_from ← prazan skup
-
-    // Za vrh n, g[n] je trenutno poznati trošak najjeftinijeg puta od početka do n.
-    g ← mapa s početnom vrijednošću Beskonačno
-    g[početak] ← 0
-
-    // Za vrh n, f[n] ← g[n] + h(n). f[n] predstavlja našu trenutnu najbolju procjenu
-    f ← mapa s početnom vrijednošću Beskonačno
-    f[početak] ← h(početak)
-
-    dok otvoreni_skup nije prazan:
-
-        trenutni ← vrh u otvorenom skupu s najmanjom f[] vrijednošću
-        ako trenutni = cilj:
-            return rekonstruirajPut(came_from, trenutni)
-
-        ukloni trenutni iz otvoreni_skup
-  
-        za svaki susjed trenutnog vrha:
-
-            // tentativni_g je udaljenost od početka do susjeda kroz trenutni vrh
-            tentativni_g ← g[trenutni] + težina grane od trenutnog do susjeda
-            ako je tentativni_g < g[susjed]:
-                // Ovaj put do susjeda je bolji od bilo kojeg prethodnog. Zabilježi ga!
-                came_from[susjed] ← trenutni
-                g[susjed] ← tentativni_g
-                f[susjed] ← tentativni_g + h(susjed)
-                ako susjed nije u otvorenom skupu:
-                    dodaj susjed u otvoreni_skup
-
-
-    // Otvoreni skup je prazan, ali cilj nikada nije postignut
-    return neuspjeh
-```
-
 # 3. Heuristika
 Slijepi postupci raspolažu isključivo egzaktnim informacijama na primjer početnim i trenutnim stanjem i ispitnim predikatom. Možemo poboljšati i ubrzati riješavanje problema ako uz te informacije koristimo i informacije o prirodi problema. Ako otprilike znamo smjer u kojim se nalazi riješenje možemo koristiti tu informaciju u našu korist.
 
@@ -298,7 +201,7 @@ $$h(B)=7$$
 
 U simulaciji kao heuristiku koristit ćemo udaljenost trenutnog čvora i odabranog cilj.
 Kako bismo računali udaljenost između dva čvora možemo koristiti razne metode npr.:
-- **Euklidska udaljenost (Euclidean Distance)**:  
+- **Euklidska udaljenost (Euclidean distance)**:  
   Ovo je najčešći način izračunavanja udaljenosti u prostoru kada imamo dva čvora s koordinatama $(x_1, y_1)$ i $(x_2, y_2)$.  
   Formula:  
   $$
@@ -306,7 +209,7 @@ Kako bismo računali udaljenost između dva čvora možemo koristiti razne metod
   $$  
   Koristi se kada želimo izračunati stvarnu udaljenost između dvaju čvorova u ravnini.
 
-- **Manhattanska udaljenost (Manhattan Distance)**:  
+- **Menhetanska udaljenost (Manhattan distance)**:  
   Ova udaljenost se koristi kada se dopuštaju samo horizontalna i vertikalna kretanja (kao u mreži kvadrata, bez dijagonala).  
   Formula:  
   $$
@@ -314,7 +217,7 @@ Kako bismo računali udaljenost između dva čvora možemo koristiti razne metod
   $$  
   Ovaj način je koristan kada ne možete kretati dijagonalno, kao što je slučaj u mrežama poput tih u računalnim igrama.
 
-- **Chebyshevova udaljenost (Chebyshev Distance)**:  
+- **Čebiševljeva udaljenost (Chebyshev distance)**:  
   Ova udaljenost je pogodna za kretanje u mreži gdje je dopušteno kretanje u svim smjerovima (i dijagonalno).  
   Formula:  
   $$
@@ -326,7 +229,7 @@ Po **Definicija 2.12** sve su tri udaljenosti kao heuristike prihvatiljive u sim
 
 Kako možemo vidjeti sa simulacije vrijeme izvoženja algoritma ovisan je o odabiru heuristike.
 
-Pošto smo razvili igricu u 2D mreži u kojoj je dozvoljeno se kretati samo horizontalno i vertikalno, za funkciju heuristike $h(v_k)$ **Manhattan distance** ili **Manhattan udaljenost** najbolje procijenjuje udaljenost i zbog toga nam daje bolje performanse jer istražuje najmanji broj čvorova.
+Pošto smo razvili igricu u 2D mreži u kojoj je dozvoljeno se kretati samo horizontalno i vertikalno, za funkciju heuristike $h(v_k)$ **Manhattan distance** ili **Menhetanska udaljenost** najbolje procijenjuje udaljenost i zbog toga nam daje bolje performanse jer istražuje najmanji broj čvorova.
 
 
 
@@ -338,8 +241,8 @@ Korisnik može pokrenuti simulaciju kretanja igrača po izračunatom putu, pomag
 
 Korisnik može obrisati sve prepreke i polja s većim težinama ili nasumično postaviti prepreke po gridu jednim klikom.
 
-Sa desne stane korisnik može izabrati sa kojom heuristikom će se izračunati put, odabir je izmđu Euklidske udaljenosti, Manhattanske udaljenosti i Chebyshevove udaljenosti.
-Za potrebe ove simulacije smo kao zadanu vrijednost postavili Manhattansku udaljenost kako najviše odgovara potrebama simulacije.
+Sa desne stane korisnik može izabrati sa kojom heuristikom će se izračunati put, odabir je izmđu Euklidske udaljenosti, Menhetanske udaljenosti i Čebiševljeve udaljenosti.
+Za potrebe ove simulacije smo kao zadanu vrijednost postavili Menhetansku udaljenost kako najviše odgovara potrebama simulacije.
 
 U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za izračunavanje najkraćeg puta, kao i ukupni trošak (cost), koji predstavlja sumu težina svih koraka na najkraćem putu. Težine polja su: zeleno polje ima težinu 1, bež polje težinu 2 a narančasto polje težinu 3.
 
@@ -357,7 +260,7 @@ U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za 
 
 # 5. Zaključak
 
-A* algoritam je vrlo moćan pathfinding algoritam koncepiran na bazi Dijkstrinog algoritma s dodanom heurističkom funkcijom radi bržeg i učinkovitijeg pronalaženja najkraćeg puta. Heuristika A* algoritma ovisi o prirodi problema kojeg se pokušava rješiti pomoću pathfindinga, te pokazali smo par od mnogobrojnih mogućnosti odabira heuristika. Kroz našu simulaciju pathfindinga u video igri možete vidjeti primjer primjene A* s Manhattanovom, Euklidskom i Chebyshevom heuristikom.
+A* algoritam je vrlo moćan pathfinding algoritam koncepiran na bazi Dijkstrinog algoritma s dodanom heurističkom funkcijom radi bržeg i učinkovitijeg pronalaženja najkraćeg puta. Heuristika A* algoritma ovisi o prirodi problema kojeg se pokušava rješiti pomoću pathfindinga, te pokazali smo par od mnogobrojnih mogućnosti odabira heuristika. Kroz našu simulaciju pathfindinga u video igri možete vidjeti primjer primjene A* s Menhetanovom, Euklidskom i Čebiševljevom heuristikom.
 
 Iz ovog projekta možemo zaključiti da primjena A* algoritma s pravilno odabranom heurističkom funkcijom rezultira vrlo moćinm i učinkovitim rješenjem za pronalaženje puta, što ga čini primjenjivim u različitim područjima - od računalnih igara do navigacijskih sustava i robotike.
 
