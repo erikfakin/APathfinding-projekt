@@ -4,13 +4,20 @@
 Mnogi se problemi u domeni informatike i znanosti mogu generalizirati kao pronalaženje puta u grafovima.
 Algoritmi pretraživanja su stoga vrlo bitni.
 Primjeri problema koja možemo riješiti pomoću tih algoritama su:
- - navigacija i prostorna orijentcija
- - video igre
- - telekomunikacijske mreže
- - logistika i tranport
- - urbanističko planiranje
- - robotika
- - dizajn tiskanih ploča
+
+- navigacija i prostorna orijentcija
+
+- video igre
+
+- telekomunikacijske mreže
+
+- logistika i tranport
+
+- urbanističko planiranje
+
+- robotika
+
+- dizajn tiskanih ploča
 
  
 Graf je skup čvorova povezanih međusobno pomoću bridova. 
@@ -60,16 +67,15 @@ Kod svake promjene na mapu koristmo A* algoritam kako bismo pronašli najbrži p
 
 # 2. A* algoritam
 
-## 2.1 Osnovni pojmovi
+## Osnovni pojmovi
 
 **Definicija 2.1.** ***Graf*** *$G$ je uređena trojka $G = (V(G), E(G), \psi_G)$, koja se sastoji od nepraznog skupa $V = V(G)$, čiji su elementi vrhovi grafa $G$, skupa $E = E(G)$ disjunktnog sa $V(G)$, čiji su elementi bridovi grafa $G$, i funkcije incidencije $\psi_G$, koja svakom bridu grafa $G$ pridružuje neuređeni par (ne nužno različitih) vrhova grafa $G$.*
 
 **Primjer 1.1.** Graf $G = (V, E, \varphi)$, gdje je $V = \{A, B, C, D, E\}$ s bridovima $E = \{e_1, e_2, e_3, e_4, e_5, e_6\}$. Funkcija incidencije tada bi bila:
 $\varphi(e_1) = \{A, B\}, \varphi(e_2) = \{B, C\}, \varphi(e_3) = \{C, D\},  \varphi(e_4) = \{D, E\}, \varphi(e_5) = \{D, B\}, \varphi(e_6) = \{A, E\}$
 
-![Alt text](images/graf.png)
+![Graf $G = (V, E, \varphi)$](images/graf.png)
 
-**Slika 1**: Graf $G = (V, E, \varphi)$
 
 **Definicija 2.3.** ***Šetnja*** *u grafu $G$ je netrivijalan konačan niz $W = v_0 e_0 v_1 e_1 \dots e_{k-1} v_k$ vrhova i bridova u $G$ takvi da je $e_i = \{v_i, v_{i+1}\}$ za sve $i < k$.*
 
@@ -125,6 +131,62 @@ Osnovna ideja algoritma je sljedeća:
 
 6. Pri svakom ažuriranju privremene udaljenosti susjeda trenutnog vrha, pamti se prethodnik (tj. čvor iz kojeg smo došli do tog susjeda). Na taj način, kada neki vrh postane posjećen, možemo rekonstruirati najkraći put od početnog vrha prema tom vrhu, prateći prethodnike od ciljnog vrha do početnog.
 
+### Implementacija
+```python
+def rekonstruiraj_put(prev, cilj):
+    put = []
+    trenutni = cilj
+    
+    while trenutni is not None:
+        put.insert(0, trenutni)
+        trenutni = prev.get(trenutni)
+    
+    return put
+
+def dijkstra(graph, source, cilj):
+    dist = {v: float('inf') for v in graph}
+    prev = {v: None for v in graph}
+    dist[source] = 0
+    
+    Q = list(graph.keys())  # Lista svih čvorova
+    
+    while Q:
+        min_dist = float('inf')
+        u = None
+
+        # Odabir čvora s najmanjom trenutnom udaljenosti
+        for vrh in Q:
+            if dist[vrh] < min_dist:
+                min_dist = dist[vrh]
+                u = vrh
+        
+        Q.remove(u)
+        
+        if u == cilj:
+            return rekonstruiraj_put(prev, cilj)
+        
+        for v, tezina in graph[u].items():
+            alt = dist[u] + tezina
+            if alt < dist[v]:
+                dist[v] = alt
+                prev[v] = u
+    
+    return None  # Neuspjeh ako nema puta
+
+# Primjer korištenja
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'A': 1, 'C': 2, 'D': 5},
+    'C': {'A': 4, 'B': 2, 'D': 1},
+    'D': {'B': 5, 'C': 1}
+}
+
+source = 'A'
+cilj = 'D'
+put = dijkstra(graph, source, cilj)
+print("Najkraći put:", put)
+
+```
 
 ### Primjer
 
@@ -153,9 +215,7 @@ S Dijkstrinim algoritmom moramo biti oprezni kada imamo graf u kojemu je cilj po
 
 
 
-![Alt text](images/dijkstra_graf.png)
-
-**Slika 2**: Graf $H$
+![Graf $H$](images/dijkstra_graf.png)
 
 Ako počinjemo od čvora $A$ i cilj nam je čvor $C$ i ako je brid $e_2$ *teži* od bridova $e_3,e_4,e_5$ i $e_6$, Dijkstrin algoritam će $e_2$ zadnje provjeriti u cijelom grafu $H$, odnosno provjeravati će bespotrebno sve ostale čvorove. U ovom primjeru to možda nije veliki problem, ali ako uzmete npr. primjenu pathfinding algoritama na navigacijskim sustavima, tada ovo postaje veliki problem zato jer algoritam neće uzeti u obzir *smjer* u kojem treba *šetati*. Rezultat toga je bespotrebno pretraživanje i *šetanje* po nebitnim čvorovima što zauzvrat produžuje vrijeme izračuna najbržeg puta, uz bespotrebnu uporabu računalnih resursa itd.
 
@@ -195,9 +255,7 @@ Heuristika je postupak, koji pomoću iskustvena pravila o prirodi problema i oso
 
 Za sliku 1 i 2, za funkciju heuristike možemo koristiti doslovnu udaljenost, odnosno euklidsku udaljenost između dva čvora.
 
-![Alt text](images/astarudalj.png)
-
-**Slika 3**: Graf $H$
+![Graf $H$](images/astarudalj.png)
 
 **Primjer:** za funkciju heuristike $h(v_k)$ od početnog čvora $B$ do ciljanog čvora $G$, funkcija će izgledati:
 
@@ -250,17 +308,13 @@ Za potrebe ove simulacije smo kao zadanu vrijednost postavili Menhetansku udalje
 
 U donjem desnom kutu programa prikazani su podaci o vremenu (u ms) potrebnom za izračunavanje najkraćeg puta, kao i ukupni trošak (cost), koji predstavlja sumu težina svih koraka na najkraćem putu. Težine polja su: zeleno polje ima težinu 1, bež polje težinu 2 a narančasto polje težinu 3.
 
-![Alt text](images/simulacija1.jpg)
+![Prazan grid bez prepreka, cilja li igrača](images/simulacija1.jpg)
 
-**Slika 4**: Prazan grid bez prepreka, cilja ili igrača
 
-![Alt text](images/simulacija2.jpg)
+![Grid s igračem, ciljem i rikazanim najkraćim putem od igrača do cilja](images/simulacija2.jpg)
 
-**Slika 5**: Grid s igračem, ciljem i prikazanim najkraćim putem od igrača do cilja
+![Grid sa preprekama i poljima ovećane težine, uz prikaz najkraćeg puta od igrača do cilja](images/simulacija3.jpg)
 
-![Alt text](images/simulacija3.jpg)
-
-**Slika 6**: Grid sa preprekama i poljima povećane težine, uz prikaz najkraćeg puta od igrača do cilja
 
 # 5. Zaključak
 
